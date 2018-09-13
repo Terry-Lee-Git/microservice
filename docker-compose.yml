@@ -1,0 +1,48 @@
+#定义compose的版本，有些参数高版本有，低版本谬
+version: "3"
+#定义服务，可以多个
+services:
+#具体的服务名，其他的服务可以通过该服务名来访问
+  message-service:
+  #第一这个服务使用的镜像一个镜像的版本，默认版本latest，建议不要使用latest
+    image: message-service
+
+  user-service:
+    image: user-service
+    command:
+    - "--mysql.address=10.10.17.202"
+
+  user-edge-service:
+    image: user-edge-service
+    #依赖关系
+    links:
+    - user-service
+    - message-service
+    command:
+    - "--redis.address=10.10.17.202"
+
+  course-service:
+    image: course-service
+    links:
+    - user-service
+    command:
+    - "--mysql.address=10.10.17.202"
+    - "--zookeeper.address=10.10.17.202"
+
+  course-edge-service:
+    image: course-edge-service
+    #依赖关系
+    links:
+    - user-edge-service
+    command:
+    - "--zookeeper.address=10.10.17.202"
+
+  api-gateway-zuul:
+    image: api-gateway-zuul
+    #依赖关系
+    links:
+    - user-edge-service
+    - course-edge-service
+    #定义暴露的端口，若写成6379:6379/tcp则表示将宿主机的6379转发到容器的6379，写成6379或6379/tcp表示docker随机分配一个宿主机端口给容器内的6379
+    ports:
+      - 80:80
