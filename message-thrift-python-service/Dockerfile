@@ -6,6 +6,6 @@ RUN pip install -U pip
 RUN pip install thrift
 
 ENV PYTHONPATH /
-COPY target/message /message
+COPY message /message
 
 ENTRYPOINT ["python","/message/message_service.py"]
