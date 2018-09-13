@@ -64,11 +64,12 @@ public abstract class LoginFilter implements Filter {
         login(rq,rp,userDTO);
         chain.doFilter(rq,rp);
     }
+    protected abstract String userEdgeServiceAddr();
 
     protected abstract void login(HttpServletRequest rq, HttpServletResponse rp, UserDTO userDTO);
 
     private UserDTO requestUserInfo(String token) {
-        String url="http://user-edge-service:8082/user/authentication";
+        String url="http://"+userEdgeServiceAddr()+"/user/authentication";
         HttpClient client=new DefaultHttpClient();
         HttpPost post=new HttpPost(url);
         post.addHeader("token",token);
