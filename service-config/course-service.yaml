@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
       - name: course-service
-        image: {{HUB}}/micro-service/course-service:latest
+        image: hub.local/micro-service/course-service:latest
         ports:
         - containerPort: 20880
       - name: course-edge-service
